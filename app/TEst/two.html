@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text to URL Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 60%;
+      padding: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Text to URL Converter</h1>
+  <form id="textToUrlForm">
+    <input type="text" id="textInput" placeholder="Enter text">
+    <button type="submit">Convert</button>
+  </form>
+  <div id="result"></div>
+  <!-- <script src="script.js"></script> -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('textToUrlForm');
+      const textInput = document.getElementById('textInput');
+      const resultDiv = document.getElementById('result');
+
+      let conversions; // To store the JSON data
+
+      // Load the JSON data from the external file
+      fetch('conversions.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load JSON data.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          conversions = data;
+        })
+        .catch(error => {
+          console.error('Error loading JSON:', error);
+        });
+
+      // Ensure that JSON data is loaded before form submission
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (!conversions) {
+          console.error('JSON data not loaded.');
+          return;
+        }
+
+        const str = textInput.value.trim().toLowercase();
+        function processString(str) {
+          // Convert the input string to lowercase for case-insensitive comparison
+          const lowerStr = str.toLowerCase();
+
+          // Use a switch statement to perform different actions based on the input
+          switch (true) {
+            case lowerStr.startsWith("open"):
+              // Perform action for "open" case
+              console.log("Opening: " + str);
+              const url = convertTextToUrl(str, "open");
+              if (url) {
+                resultDiv.textContent = 'Result: ' + url;
+                openLinkInNewWindow(url)
+              } else {
+                resultDiv.textContent = 'Invalid input.';
+              }
+              // You can add more code here for the "open" case
+              break;
+
+            case lowerStr.startsWith("search"):
+              // Perform action for "search" case
+              console.log("Searching: " + str);
+              // You can add more code here for the "search" case
+              break;
+
+            case lowerStr.startsWith("close"):
+              // Perform action for "close" case
+              console.log("Closing: " + str);
+              // You can add more code here for the "close" case
+              break;
+
+            default:
+              // Perform a default action for cases that don't match "open," "search," or "close"
+              console.log("No action defined for: " + str);
+            // You can add more code here for the default case
+          }
+        }
+
+        // Test the function with different cases
+        processString("Open Google"); // Opening: Open Google
+        processString("Search for news"); // Searching: Search for news
+        processString("Close the window"); // Closing: Close the window
+        processString("Do something else"); // No action defined for: Do something else
+
+
+      });
+
+      function convertTextToUrl(text, type) {
+        const lowerText = text.toLowerCase();
+        // const lowerText = text;
+        if (type == "open") {
+          if (conversions && lowerText in conversions) {
+            return conversions[lowerText];
+          }
+        } else if (type == "search") {
+
+        }
+        return null;
+      }
+    });
+
+
+    // This will open a new browser window or tab
+    function openLinkInNewWindow(url) {
+      window.open(url, '_blank');
+    }
+
+    // Example: When a button with id "openLinkButton" is clicked
+    // document.getElementById('openLinkButton').addEventListener('click', function () {
+    //   openLinkInNewWindow('https://example.com');
+    // });
+
+
+  </script>
+</body>
+
+</html>

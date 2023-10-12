@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Virtual Assistant</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS stylesheet -->
+</head>
+
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <h1>Your Virtual Assistant</h1>
+  </header>
+
+  <section id="services">
+    <h2>Our Services</h2>
+    <ul>
+      <li>Administrative Support</li>
+      <li>Data Entry</li>
+      <li>Customer Service</li>
+      <li>Content Management</li>
+      <!-- Add more services here -->
+    </ul>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>
+      We are a team of dedicated virtual assistants ready to help you with your business needs. Our mission is to make
+      your work easier and more efficient.
+    </p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>If you need assistance, please contact us using the form below:</p>
+    <form action="submit_form.php" method="post"> <!-- Specify the correct action and method for form submission -->
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Your Virtual Assistant</p>
+  </footer>
+</body>
+
+</html>

@@ -8,7 +8,11 @@ interface WebsiteData {
     [key: string]: string; // Define an index signature for WebsiteData
 }
 
-const VirtualAssistant = ({ mode }) => {
+interface Props {
+    mode: any;
+}
+
+const VirtualAssistant = ({ mode }: Props) => {
     const [chats, setChats] = useState([
         { role: "bot", message: "Hello! How can I help you?" },
     ]);
@@ -141,10 +145,10 @@ const VirtualAssistant = ({ mode }) => {
         command = command.toLowerCase();
         if (command.startsWith("open ")) {
             const query: string = command.substring(5);
-            const url = websiteData[query];
+            const url = websiteData?.[query];
             let resp = "Opening " + capitalizeFirstLetter(query) + "...";
             botResponseText(resp);
-            openTab(url);
+            if (url) openTab(url);
         } else if (websiteData && command in websiteData) {
             const url = websiteData[command];
             // const query =
@@ -223,7 +227,7 @@ const VirtualAssistant = ({ mode }) => {
 
     function scrollToBottom() {
         var chatbox = document.getElementById("chat-message");
-        chatbox.scrollTop = chatbox.scrollHeight;
+        if (chatbox) chatbox.scrollTop = chatbox.scrollHeight;
     }
 
     return (

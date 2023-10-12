@@ -3,7 +3,11 @@ import Image from "next/image";
 
 import { useEffect, useState } from "react";
 
-function RecordingBar({ mode, setMode }) {
+interface Props {
+    mode: any;
+    setMode: any;
+}
+function RecordingBar({ mode, setMode }: Props) {
     const [leftScr, setLeftScr] = useState("/icons/keyboard-regular.svg");
     const [centerScr, setCenterScr] = useState("/mic.png");
 

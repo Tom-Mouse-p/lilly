@@ -223,6 +223,9 @@ const VirtualAssistant = ({ mode }: Props) => {
             songName
         )}`;
 
+        botResponseText(
+            "Playing " + capitalizeFirstLetter(songName) + " on Spotify..."
+        );
         // Check if the Spotify app is installed
         if (isSpotifyAppInstalled(spotifySearchURI)) {
             // Open the Spotify app
@@ -262,9 +265,13 @@ const VirtualAssistant = ({ mode }: Props) => {
 
             if (isGoogleAppInstalled) {
                 // Open the Google app using a custom URI scheme
-                window.location.href = `googlesearch://${encodeURIComponent(
+                const googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(
                     searchTerm
                 )}`;
+
+                // Open the URL in the device's default web browser
+                // window.open(googleSearchURL, "_blank");
+                openTab(googleSearchURL);
             } else {
                 // Open the URL in a new tab
                 openTab(googleSearchURL);

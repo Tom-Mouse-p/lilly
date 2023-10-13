@@ -165,7 +165,12 @@ const VirtualAssistant = ({ mode }: Props) => {
                 command.startsWith("search ")) &&
             command.includes("on youtube")
         ) {
-            const query = command.substring(11, command.indexOf(" on youtube"));
+            let query = "";
+            if (command.startsWith("search for ")) {
+                query = command.substring(11, command.indexOf(" on youtube"));
+            } else {
+                query = command.substring(7, command.indexOf(" on youtube"));
+            }
             const youtubeSearchURL =
                 "https://www.youtube.com/results?search_query=";
             botResponseText(input);
@@ -177,7 +182,7 @@ const VirtualAssistant = ({ mode }: Props) => {
                 query = command.substring(11);
             }
             // const searchEngine = "https://www.google.com/search?q=";
-            botResponseText(input);
+            botResponseText("Searching  " + query + " on Google");
             performGoogleSearch(query);
             // window.open(searchEngine + query, "_blank");
             // resultDiv.textContent = `Searching for ${query}`;
@@ -227,11 +232,11 @@ const VirtualAssistant = ({ mode }: Props) => {
 
     function isSpotifyAppInstalled(spotifySearchURI: any) {
         // You can check if the Spotify URI scheme is supported
-        // return (window.location.href = spotifySearchURI);
+        return (window.location.href = spotifySearchURI);
         // if (window.location.href = spotifySearchURI){
 
         // };
-        return false;
+        // return false;
     }
 
     function performGoogleSearch(searchTerm: string) {

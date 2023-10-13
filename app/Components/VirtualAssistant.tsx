@@ -27,10 +27,11 @@ const VirtualAssistant = ({ mode }: Props) => {
 
     const JSON_DATA_URL = "/websites.json";
 
-    // useEffect(() => {
-    //     processInpCommand();
-    //     console.log("ghjk");
-    // }, [voiceStopped]);
+    useEffect(() => {
+        // processInpCommand();
+        handleVoiceCommand();
+        console.log("inputRef Changed", inputRef);
+    }, [inputRef.current]);
 
     useEffect(() => {
         const startButton = document.getElementById("startButton");
@@ -50,21 +51,21 @@ const VirtualAssistant = ({ mode }: Props) => {
 
             recognition.onstart = () => {
                 setOutput("Listening...");
-                // output.textContent = "Listening...";
-                console.log("listening");
             };
 
-            // let temp: string;
+            let temp: string = "";
 
             recognition.onresult = (event: any) => {
                 const result = event.results[0][0].transcript.trim();
                 console.log("You said:", result);
                 let gg = `You said: ${result}`;
                 setOutput1(gg);
+                setInput(result);
                 let speechCommand = removeLastCharacter(result)
                     .toLowerCase()
                     .trim();
                 inputRef.current = speechCommand;
+                temp = speechCommand;
 
                 // setInput(speechCommand); // Update the input state directly
                 console.log("Calling processInpCommand", speechCommand);
@@ -76,21 +77,23 @@ const VirtualAssistant = ({ mode }: Props) => {
 
             recognition.onend = () => {
                 setOutput("Stopped");
-                // output.textContent = "Speech recognition stopped.";
-                console.log("stopped");
+                if (output) output.textContent = "Speech recognition stopped.";
+                // console.log("stopped");
 
                 // setInput(temp);
                 // processInpCommand();
-                console.log("Calling processInpCommand");
+                // console.log("Calling processInpCommand");
                 // setVoiceStopped(!voiceStopped);
             };
 
             startButton?.addEventListener("click", () => {
                 if (mode == 1) {
-                    console.log(1);
                     recognition.start();
                 }
             });
+
+            // setInput(temp);
+            // handleVoiceCommand();
         } else {
             output!.textContent =
                 "Speech recognition is not supported in your browser.";
@@ -124,8 +127,9 @@ const VirtualAssistant = ({ mode }: Props) => {
     };
 
     function handleVoiceCommand() {
-        console.log("inp", input);
+        console.log("inp ", input);
         setInput(inputRef.current);
+        console.log("inp2 ", input);
         processInpCommand();
     }
 
@@ -157,34 +161,108 @@ const VirtualAssistant = ({ mode }: Props) => {
             openTab(url);
             // resultDiv.textContent = `Opening ${command}`;
         } else if (
-            command.startsWith("search for ") &&
+            (command.startsWith("search for ") ||
+                command.startsWith("search ")) &&
             command.includes("on youtube")
         ) {
             const query = command.substring(11, command.indexOf(" on youtube"));
             const youtubeSearchURL =
                 "https://www.youtube.com/results?search_query=";
+            botResponseText(input);
             window.open(youtubeSearchURL + encodeURIComponent(query), "_blank");
-            botResponseText(input);
             // resultDiv.textContent = `Searching for "${query}" on YouTube`;
-        } else if (command.startsWith("search for ")) {
-            const query = command.substring(11);
-            const searchEngine = "https://www.google.com/search?q=";
-            window.open(searchEngine + query, "_blank");
+        } else if (command.startsWith("search ")) {
+            let query: string = command.substring(7);
+            if (command.startsWith("search for ")) {
+                query = command.substring(11);
+            }
+            // const searchEngine = "https://www.google.com/search?q=";
             botResponseText(input);
+            performGoogleSearch(query);
+            // window.open(searchEngine + query, "_blank");
             // resultDiv.textContent = `Searching for ${query}`;
         } else if (command.startsWith("play ")) {
             const song = command.substring(5);
-            const spotifySearchURL = `https://open.spotify.com/search/${encodeURIComponent(
-                song
-            )}`;
-            botResponseText(input);
-            openTab(spotifySearchURL);
+            searchSpotify(song);
+            // const spotifySearchURI = `spotify:search:${encodeURIComponent(
+            //     song
+            // )}`;
+
+            // // Attempt to open the Spotify app
+            // window.location.href = spotifySearchURI;
+            // const spotifySearchURL = `https://open.spotify.com/search/${encodeURIComponent(
+            //     song
+            // )}`;
+            // botResponseText(input);
+            // openTab(spotifySearchURL);
 
             // You can add code here to play music, e.g., using an external API
             // resultDiv.textContent = `Playing ${song}`;
         } else {
             botResponseText("Invalid Command");
-            // resultDiv.textContent = "Invalid command";
+        }
+    }
+
+    function searchSpotify(songName: string) {
+        // Get the user input
+        // const songName = document.getElementById('songName').value;
+
+        // Construct the Spotify URI for search
+        const spotifySearchURI = `spotify:search:${encodeURIComponent(
+            songName
+        )}`;
+
+        // Check if the Spotify app is installed
+        if (isSpotifyAppInstalled(spotifySearchURI)) {
+            // Open the Spotify app
+            window.location.href = spotifySearchURI;
+        } else {
+            // Redirect to a web-based Spotify search
+            let url = `https://open.spotify.com/search/${encodeURIComponent(
+                songName
+            )}`;
+            openTab(url);
+        }
+    }
+
+    function isSpotifyAppInstalled(spotifySearchURI: any) {
+        // You can check if the Spotify URI scheme is supported
+        // return (window.location.href = spotifySearchURI);
+        // if (window.location.href = spotifySearchURI){
+
+        // };
+        return false;
+    }
+
+    function performGoogleSearch(searchTerm: string) {
+        // Get the user's search term
+        // const searchTerm = document.getElementById('searchTerm').value;
+
+        // Construct the Google search URL
+        const googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(
+            searchTerm
+        )}`;
+
+        const isAndroid = /Android/i.test(navigator.userAgent);
+
+        if (isAndroid) {
+            // Check if the Google app is installed on Android
+            const isGoogleAppInstalled = true;
+
+            if (isGoogleAppInstalled) {
+                // Open the Google app using a custom URI scheme
+                window.location.href = `googlesearch://${encodeURIComponent(
+                    searchTerm
+                )}`;
+            } else {
+                // Open the URL in a new tab
+                openTab(googleSearchURL);
+                // window.open(googleSearchURL, "_blank");
+            }
+        } else {
+            // For non-Android devices, simply open the URL in a new tab
+            openTab(googleSearchURL);
+            // window.open(googleSearchURL, "_blank");
         }
     }
 
@@ -208,7 +286,7 @@ const VirtualAssistant = ({ mode }: Props) => {
     function openTab(url: string) {
         setTimeout(() => {
             window.open(url, "_blank");
-        }, 4000);
+        }, 3000);
     }
 
     function capitalizeFirstLetter(str: string) {
@@ -234,6 +312,7 @@ const VirtualAssistant = ({ mode }: Props) => {
         <div className="flex justify-center h-screen bg-slate-900 overflow-hidden">
             <div className="bg-slate-800 w-full sm:w-3/4 md:w-1/2 md:max-w-2xl ">
                 <div>
+                    {/* Chat Area */}
                     <div
                         className="p-6 pb-0 overflow-y-auto h-[calc(100vh-10.5rem)]"
                         id="chat-message"
@@ -252,8 +331,8 @@ const VirtualAssistant = ({ mode }: Props) => {
                         ))}
                     </div>
 
+                    {/* The Info Bar above the nav */}
                     {mode === 0 ? (
-                        // <div className="flex justify-center">
                         <form
                             onSubmit={handleSubmit}
                             className="flex items-center fixed bottom-24 bg-slate-950 w-full sm:w-3/4 md:w-1/2 md:max-w-2xl pt-2 pb-6 px-6"
@@ -273,16 +352,13 @@ const VirtualAssistant = ({ mode }: Props) => {
                             </button>
                         </form>
                     ) : (
-                        // </div>
                         <div className="fixed bottom-24 bg-slate-950 w-full sm:w-3/4 md:w-1/2 md:max-w-2xl pt-2 pb-6 px-6">
-                            {/* <p>hh</p> */}
                             <div id="output" className="block">
                                 {output}
                             </div>
                             <div id="output1" className="block">
                                 {output1}
                             </div>
-                            {/* <p>hh</p> */}
                         </div>
                     )}
                 </div>

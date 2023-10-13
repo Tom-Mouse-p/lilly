@@ -30,15 +30,7 @@ function RecordingBar({ mode, setMode }: Props) {
     };
 
     function swapInput() {
-        // console.log(e);
-        // const swapImg = document.getElementById("swapImg");
         handleChangeImage();
-    }
-
-    function doStuff() {
-        if (mode == 1) {
-            //
-        }
     }
 
     return (
@@ -66,7 +58,6 @@ function RecordingBar({ mode, setMode }: Props) {
                     <button
                         type="button"
                         className="w-16 h-16 rounded-full p-4 flex justify-center items-center"
-                        // onClick={doStuff}
                         id="startButton"
                     >
                         <Image
@@ -90,11 +81,5 @@ function RecordingBar({ mode, setMode }: Props) {
         </div>
     );
 }
-
-// const swapInput = document
-//     .getElementById("swapBtn")
-//     ?.addEventListener("click", (e) => {
-//         console.log(e);
-//     });
 
 export default RecordingBar;

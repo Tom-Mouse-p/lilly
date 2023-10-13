@@ -163,13 +163,19 @@ const VirtualAssistant = ({ mode }: Props) => {
         } else if (
             (command.startsWith("search for ") ||
                 command.startsWith("search ")) &&
-            command.includes("on youtube")
+            (command.includes("on youtube") || command.includes("on youtub"))
         ) {
             let query = "";
-            if (command.startsWith("search for ")) {
-                query = command.substring(11, command.indexOf(" on youtube"));
+            let index;
+            if (command.includes("on youtub")) {
+                index = command.indexOf(" on youtub");
             } else {
-                query = command.substring(7, command.indexOf(" on youtube"));
+                index = command.indexOf(" on youtube");
+            }
+            if (command.startsWith("search for ")) {
+                query = command.substring(11, index);
+            } else {
+                query = command.substring(7, index);
             }
             const youtubeSearchURL =
                 "https://www.youtube.com/results?search_query=";
@@ -305,7 +311,9 @@ const VirtualAssistant = ({ mode }: Props) => {
         }
 
         // Use the slice method to remove the last character
-        return inputString.slice(0, -1);
+        if (inputString.endsWith(".")) return inputString.slice(0, -1);
+
+        return inputString;
     }
 
     function scrollToBottom() {

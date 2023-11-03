@@ -1,60 +1,52 @@
 import React from "react";
 
 // Define the data as an object
-const commandData = {
-    "DATE AND TIME": [
-        "what is the time & date",
-        "what is the current time and date",
-        "what is the date and time",
-        "what is the current date and time",
-    ],
-    DATE: ["what is time", "what is the time", "what is the current time"],
-    TIME: ["what is date", "what is the date", "what is the current date"],
-    "SEARCH (GOOGLE)": ["Search __", "Search for __"],
-    "SEARCH (YOUTUBE)": ["Search for __ on youtube"],
-    "OPEN APPS/WEBSITE": ["Open __"],
-    "MUSIC ON SPOTIFY": ["Play __"],
-};
+const commandData: Record<string, string[]> = require("./commandData.json");
 
-// Reusable TableRow component
-const TableRow = ({ data }: { data: string[] }) => (
-    <tr>
-        {data.map((command, index) => (
-            <td key={index} className="border px-4 py-2">
-                {command}
-            </td>
-        ))}
-    </tr>
-);
+// Now you can use commandData as an object containing your commands
 
-const CommandsTable = () => {
+const CommandsList: React.FC = () => {
     return (
-        <div className="overflow-x-auto ">
-            <table className="min-w-full border-collapse">
-                <caption className="caption-top mb-2">
-                    Table: List of Commands.
-                </caption>
-                <thead className="overflow-scroll">
-                    <tr className="bg-slate-900">
-                        <th className="px-4 py-2 border">Category</th>
-                        <th className="px-4 py-2 border" colSpan={4}>
-                            Command
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {Object.entries(commandData).map(
-                        ([category, commands], index) => (
-                            <TableRow
-                                key={index}
-                                data={[category, ...commands]}
-                            />
-                        )
+        <div className="bg-slate-900 container p-4 rounded-lg">
+            <h2 className="mb-4 text-3xl font-semibold border-slate-700 border-b-2 py-4">
+                List Of Commands
+            </h2>
+            {Object.entries(commandData).map(([category, commands], index) => (
+                <div key={index} className="mb-4">
+                    <h3 className="font-semibold capitalize">
+                        {category.toLowerCase()}
+                    </h3>
+
+                    {category === "DATE AND TIME" ? (
+                        <ul className="list-disc pl-6">
+                            {commands.map((command, cmdIndex) =>
+                                cmdIndex % 2 === 0 ? (
+                                    <li
+                                        key={cmdIndex}
+                                        className="code capitalize select-all text-slate-400"
+                                    >
+                                        {command}
+                                    </li>
+                                ) : null
+                            )}
+                        </ul>
+                    ) : (
+                        <ul className="list-disc pl-6">
+                            {commands.map((command, cmdIndex) => (
+                                <li
+                                    key={cmdIndex}
+                                    className="code capitalize select-all text-slate-400"
+                                >
+                                    {command}
+                                    {""}
+                                </li>
+                            ))}
+                        </ul>
                     )}
-                </tbody>
-            </table>
+                </div>
+            ))}
         </div>
     );
 };
 
-export default CommandsTable;
+export default CommandsList;

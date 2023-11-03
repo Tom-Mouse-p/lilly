@@ -1,6 +1,7 @@
 // pages/index.tsx
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+const commandData: Record<string, string[]> = require("./commandData.json");
 
 interface WebsiteData {
     [key: string]: string;
@@ -133,9 +134,14 @@ const VirtualAssistant = ({ mode }: Props) => {
         if (command.startsWith("open ")) {
             const query: string = command.substring(5);
             const url = websiteData?.[query];
-            let resp = "Opening " + capitalizeFirstLetter(query) + "...";
-            botResponseText(resp);
-            if (url) openTab(url);
+            if (url) {
+                let resp =
+                    "Opening " + capitalizeFirstLetter(query) + "...   " + url;
+                botResponseText(resp);
+                openTab(url);
+            } else {
+                botResponseText("Invalid Website or app");
+            }
         } else if (websiteData && command in websiteData) {
             const url = websiteData[command];
             let resp = "Opening " + capitalizeFirstLetter(command) + "...";
@@ -192,14 +198,26 @@ const VirtualAssistant = ({ mode }: Props) => {
 
             // You can add code here to play music, e.g., using an external API
             // resultDiv.textContent = `Playing ${song}`;
-        } else if (
-            command.startsWith(
-                "what is the time & date" ||
-                    "what is the current time and date" ||
-                    "what is the date and time" ||
-                    "what is the current date and time"
-            )
-        ) {
+        } // Check if the command matches any of the DATE_AND_TIME_PHRASES
+        else if (handleDatetimeCommand("DATE AND TIME", command)) {
+            let date = new Date();
+            const current_time =
+                date.getHours() +
+                ":" +
+                date.getMinutes() +
+                ":" +
+                date.getSeconds();
+            const res =
+                "Current Date and Time: " +
+                date.toLocaleDateString("en-IN") +
+                " " +
+                current_time;
+            botResponseText(res);
+        } else if (handleDatetimeCommand("DATE", command)) {
+            let date = new Date();
+            const res = "Current time is: " + date.toLocaleDateString("en-IN");
+            botResponseText(res);
+        } else if (handleDatetimeCommand("TIME", command)) {
             let date = new Date();
             var current_time =
                 date.getHours() +
@@ -207,43 +225,21 @@ const VirtualAssistant = ({ mode }: Props) => {
                 date.getMinutes() +
                 ":" +
                 date.getSeconds();
-            // console.log(date);
-
-            const res =
-                "Current Date and time is : " +
-                date.toLocaleDateString("en-IN") +
-                current_time;
-            botResponseText(res);
-        } else if (
-            command.startsWith(
-                "what is time" ||
-                    "what is the time" ||
-                    "what is the current time"
-            )
-        ) {
-            var date = new Date();
-            var current_time =
-                date.getHours() +
-                ":" +
-                date.getMinutes() +
-                ":" +
-                date.getSeconds();
-
-            const res = "Current time is: " + current_time;
-            botResponseText(res);
-        } else if (
-            command.startsWith(
-                "what is date" ||
-                    "what is the date" ||
-                    "what is the current date"
-            )
-        ) {
-            let date = new Date().toLocaleDateString("en-IN");
-            const res = "Current date is : " + date;
+            const res = "Current date is: " + current_time;
             botResponseText(res);
         } else {
             botResponseText("Invalid Command");
         }
+    }
+
+    function handleDatetimeCommand(category: string, command: string) {
+        if (category in commandData) {
+            const categoryPhrases = commandData[category];
+            if (categoryPhrases.some((phrase) => command.startsWith(phrase))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function searchSpotify(songName: string) {
@@ -366,19 +362,35 @@ const VirtualAssistant = ({ mode }: Props) => {
                 <div>
                     {/* Chat Area */}
                     <div
-                        className="p-6 pb-0 overflow-y-auto h-[calc(100vh-10.5rem)]"
+                        className="p-6 overflow-y-auto h-[calc(100vh-10.5rem)]"
                         id="chat-message"
                     >
                         {chats.map((chat, index) => (
                             <div
+                                key={index}
+                                className={`chat ${
+                                    chat.role === "user"
+                                        ? "chat-end"
+                                        : "chat-start"
+                                }`}
+                            >
+                                {/* <div
                                 key={index}
                                 className={`p-2 m-2 rounded-lg ${
                                     chat.role === "user"
                                         ? "bg-slate-500 text-white self-end w-1/2 float-right"
                                         : "bg-slate-900 self-start w-1/2 float-left"
                                 }`}
-                            >
-                                {chat.message}
+                            > */}
+                                <p
+                                    className={`chat-bubble ${
+                                        chat.role === "user"
+                                            ? "bg-slate-700"
+                                            : "bg-slate-900"
+                                    }`}
+                                >
+                                    {chat.message}
+                                </p>
                             </div>
                         ))}
                     </div>
@@ -394,11 +406,11 @@ const VirtualAssistant = ({ mode }: Props) => {
                                 value={input}
                                 onChange={handleInputChange}
                                 placeholder="Type a message..."
-                                className="p-2 w-full h-10"
+                                className="input input-bordered w-full bg-slate-700"
                             />
                             <button
                                 type="submit"
-                                className="bg-blue-500 text-white p-2 rounded-lg ml-2"
+                                className="btn bg-slate-800 ml-2"
                             >
                                 Send
                             </button>
@@ -406,10 +418,10 @@ const VirtualAssistant = ({ mode }: Props) => {
                     ) : (
                         <div className="fixed bottom-24 bg-slate-950 w-full sm:w-3/4 md:w-1/2 md:max-w-2xl pt-2 pb-6 px-6">
                             <div id="output" className="block">
-                                {output}
+                                <p className="py-2">{output}</p>
                             </div>
                             <div id="output1" className="block">
-                                {output1}
+                                <p className="py-2">{output1}</p>
                             </div>
                         </div>
                     )}

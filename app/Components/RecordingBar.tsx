@@ -42,9 +42,9 @@ function RecordingBar({ mode, setMode }: Props) {
         <div className="fixed bottom-0 w-full h-28 flex items-center justify-center ">
             <div
                 id="helpBox"
-                className="z-10 fixed h-screen w-screen bg-slate-700 top-0 left-0 flex justify-center items-center overflow-scroll"
+                className="displayNone z-10 fixed h-screen w-screen bg-slate-800 top-0 left-0 flex items-center gap-40 p-4 my-auto flex-col overflow-auto"
             >
-                <div className="flex flex-col items-end overflow-x-auto mx-2">
+                <div className="flex flex-row-reverse container">
                     <button
                         type="button"
                         className="btn bg-slate-900"
@@ -52,8 +52,8 @@ function RecordingBar({ mode, setMode }: Props) {
                     >
                         Close
                     </button>
-                    <CommandsTable />
                 </div>
+                <CommandsTable />
             </div>
             <div
                 id="bottom_box"
@@ -93,14 +93,15 @@ function RecordingBar({ mode, setMode }: Props) {
                     id="rightBox"
                     className="flex justify-center items-center cursor-pointer"
                 >
-                    <Image
-                        src="/icons/help.svg"
-                        width={30}
-                        height={30}
-                        alt=""
-                        onClick={toggleHelp}
-                        title="Help | Display Commands"
-                    />
+                    <span className="tooltip" data-tip="Help | Command List">
+                        <Image
+                            src="/icons/help.svg"
+                            width={30}
+                            height={30}
+                            alt=""
+                            onClick={toggleHelp}
+                        />
+                    </span>
                 </div>
             </div>
         </div>

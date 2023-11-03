@@ -1,0 +1,26 @@
+DATE AND TIME:
+    "what is the time & date"
+    "what is the current time and date"
+    "what is the date and time" 
+    "what is the current date and time"
+
+DATE:
+    "what is time"
+    "what is the time"
+    "what is the current time"
+
+TIME:
+    "what is date"
+    "what is the date"
+    "what is the current date"
+
+SEARCH:
+    "Search __" (GOOGLE)
+    "Search for __" (GOOGLE)
+    "Search for __ on youtube" (YOUTUBE) 
+
+OPEN APPS/WEBSITE:
+    "Open __"
+    
+MUSIC ON SPOTIFY:
+    "Play __"

@@ -61,3 +61,11 @@ body {
     min-height: calc(100vh - 6rem);
     background: red;
 }
+
+.displayNone {
+    display: none;
+}
+
+table {
+    overflow: scroll !important;
+}

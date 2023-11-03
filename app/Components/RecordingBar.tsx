@@ -26,7 +26,7 @@ function RecordingBar({ mode, setMode }: Props) {
             setCenterScr("/icons/keyboard-regular.svg");
         }
 
-        console.log(leftScr, centerScr, mode);
+        // console.log(leftScr, centerScr, mode);
     };
 
     function swapInput() {

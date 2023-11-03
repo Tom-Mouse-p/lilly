@@ -2,10 +2,8 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 
-// import Chat from "./Chat";
-
 interface WebsiteData {
-    [key: string]: string; // Define an index signature for WebsiteData
+    [key: string]: string;
 }
 
 interface Props {
@@ -20,7 +18,6 @@ const VirtualAssistant = ({ mode }: Props) => {
     const inputRef = useRef("");
 
     const [websiteData, setWebsiteData] = useState<WebsiteData | null>(null);
-    // const [voiceStopped, setVoiceStopped] = useState(true);
 
     const [output, setOutput] = useState("Click to speak");
     const [output1, setOutput1] = useState("");
@@ -28,9 +25,8 @@ const VirtualAssistant = ({ mode }: Props) => {
     const JSON_DATA_URL = "/websites.json";
 
     useEffect(() => {
-        // processInpCommand();
         handleVoiceCommand();
-        console.log("inputRef Changed", inputRef);
+        // console.log("inputRef Changed", inputRef);
     }, [inputRef.current]);
 
     useEffect(() => {
@@ -47,8 +43,7 @@ const VirtualAssistant = ({ mode }: Props) => {
                 (window as any).webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
 
-            recognition.lang = "en-US"; // Set the language for speech recognition
-
+            recognition.lang = "en-US";
             recognition.onstart = () => {
                 setOutput("Listening...");
             };
@@ -57,7 +52,7 @@ const VirtualAssistant = ({ mode }: Props) => {
 
             recognition.onresult = (event: any) => {
                 const result = event.results[0][0].transcript.trim();
-                console.log("You said:", result);
+                // console.log("You said:", result);
                 let gg = `You said: ${result}`;
                 setOutput1(gg);
                 setInput(result);
@@ -67,23 +62,14 @@ const VirtualAssistant = ({ mode }: Props) => {
                 inputRef.current = speechCommand;
                 temp = speechCommand;
 
-                // setInput(speechCommand); // Update the input state directly
-                console.log("Calling processInpCommand", speechCommand);
+                // console.log("Calling processInpCommand", speechCommand);
 
                 handleVoiceCommand();
-                // Now, call processInpCommand directly
-                // processInpCommand();
             };
 
             recognition.onend = () => {
                 setOutput("Stopped");
                 if (output) output.textContent = "Speech recognition stopped.";
-                // console.log("stopped");
-
-                // setInput(temp);
-                // processInpCommand();
-                // console.log("Calling processInpCommand");
-                // setVoiceStopped(!voiceStopped);
             };
 
             startButton?.addEventListener("click", () => {
@@ -91,9 +77,6 @@ const VirtualAssistant = ({ mode }: Props) => {
                     recognition.start();
                 }
             });
-
-            // setInput(temp);
-            // handleVoiceCommand();
         } else {
             output!.textContent =
                 "Speech recognition is not supported in your browser.";
@@ -101,7 +84,6 @@ const VirtualAssistant = ({ mode }: Props) => {
     }, []);
 
     useEffect(() => {
-        // Load the JSON data from the external file
         fetch(JSON_DATA_URL)
             .then((response) => {
                 if (!response.ok) {
@@ -127,9 +109,9 @@ const VirtualAssistant = ({ mode }: Props) => {
     };
 
     function handleVoiceCommand() {
-        console.log("inp ", input);
+        // console.log("inp ", input);
         setInput(inputRef.current);
-        console.log("inp2 ", input);
+        // console.log("inp2 ", input);
         processInpCommand();
     }
 
@@ -147,6 +129,7 @@ const VirtualAssistant = ({ mode }: Props) => {
 
     function processCommand(command: string) {
         command = command.toLowerCase();
+        // Open Websites
         if (command.startsWith("open ")) {
             const query: string = command.substring(5);
             const url = websiteData?.[query];
@@ -155,11 +138,9 @@ const VirtualAssistant = ({ mode }: Props) => {
             if (url) openTab(url);
         } else if (websiteData && command in websiteData) {
             const url = websiteData[command];
-            // const query =
             let resp = "Opening " + capitalizeFirstLetter(command) + "...";
             botResponseText(resp);
             openTab(url);
-            // resultDiv.textContent = `Opening ${command}`;
         } else if (
             (command.startsWith("search for ") ||
                 command.startsWith("search ")) &&
@@ -194,6 +175,8 @@ const VirtualAssistant = ({ mode }: Props) => {
             // resultDiv.textContent = `Searching for ${query}`;
         } else if (command.startsWith("play ")) {
             const song = command.substring(5);
+            const res = "Searching " + song + " on Spotify...";
+            botResponseText(res);
             searchSpotify(song);
             // const spotifySearchURI = `spotify:search:${encodeURIComponent(
             //     song
@@ -209,6 +192,55 @@ const VirtualAssistant = ({ mode }: Props) => {
 
             // You can add code here to play music, e.g., using an external API
             // resultDiv.textContent = `Playing ${song}`;
+        } else if (
+            command.startsWith(
+                "what is the time & date" ||
+                    "what is the current time and date" ||
+                    "what is the date and time" ||
+                    "what is the current date and time"
+            )
+        ) {
+            let date = new Date();
+            var current_time =
+                date.getHours() +
+                ":" +
+                date.getMinutes() +
+                ":" +
+                date.getSeconds();
+            // console.log(date);
+
+            const res =
+                "Current Date and time is : " +
+                date.toLocaleDateString("en-IN") +
+                current_time;
+            botResponseText(res);
+        } else if (
+            command.startsWith(
+                "what is time" ||
+                    "what is the time" ||
+                    "what is the current time"
+            )
+        ) {
+            var date = new Date();
+            var current_time =
+                date.getHours() +
+                ":" +
+                date.getMinutes() +
+                ":" +
+                date.getSeconds();
+
+            const res = "Current time is: " + current_time;
+            botResponseText(res);
+        } else if (
+            command.startsWith(
+                "what is date" ||
+                    "what is the date" ||
+                    "what is the current date"
+            )
+        ) {
+            let date = new Date().toLocaleDateString("en-IN");
+            const res = "Current date is : " + date;
+            botResponseText(res);
         } else {
             botResponseText("Invalid Command");
         }

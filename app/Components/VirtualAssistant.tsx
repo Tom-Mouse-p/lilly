@@ -27,7 +27,6 @@ const VirtualAssistant = ({ mode }: Props) => {
 
     useEffect(() => {
         handleVoiceCommand();
-        // console.log("inputRef Changed", inputRef);
     }, [inputRef.current]);
 
     useEffect(() => {
@@ -177,27 +176,11 @@ const VirtualAssistant = ({ mode }: Props) => {
             // const searchEngine = "https://www.google.com/search?q=";
             botResponseText("Searching  " + query + " on Google");
             performGoogleSearch(query);
-            // window.open(searchEngine + query, "_blank");
-            // resultDiv.textContent = `Searching for ${query}`;
         } else if (command.startsWith("play ")) {
             const song = command.substring(5);
             const res = "Searching " + song + " on Spotify...";
             botResponseText(res);
             searchSpotify(song);
-            // const spotifySearchURI = `spotify:search:${encodeURIComponent(
-            //     song
-            // )}`;
-
-            // // Attempt to open the Spotify app
-            // window.location.href = spotifySearchURI;
-            // const spotifySearchURL = `https://open.spotify.com/search/${encodeURIComponent(
-            //     song
-            // )}`;
-            // botResponseText(input);
-            // openTab(spotifySearchURL);
-
-            // You can add code here to play music, e.g., using an external API
-            // resultDiv.textContent = `Playing ${song}`;
         } // Check if the command matches any of the DATE_AND_TIME_PHRASES
         else if (handleDatetimeCommand("DATE AND TIME", command)) {
             let date = new Date();
@@ -215,7 +198,7 @@ const VirtualAssistant = ({ mode }: Props) => {
             botResponseText(res);
         } else if (handleDatetimeCommand("DATE", command)) {
             let date = new Date();
-            const res = "Current time is: " + date.toLocaleDateString("en-IN");
+            const res = "Current date is: " + date.toLocaleDateString("en-IN");
             botResponseText(res);
         } else if (handleDatetimeCommand("TIME", command)) {
             let date = new Date();
@@ -225,10 +208,10 @@ const VirtualAssistant = ({ mode }: Props) => {
                 date.getMinutes() +
                 ":" +
                 date.getSeconds();
-            const res = "Current date is: " + current_time;
+            const res = "Current time is: " + current_time;
             botResponseText(res);
         } else {
-            botResponseText("Invalid Command");
+            botResponseText("Invalid Command.");
         }
     }
 
@@ -243,10 +226,6 @@ const VirtualAssistant = ({ mode }: Props) => {
     }
 
     function searchSpotify(songName: string) {
-        // Get the user input
-        // const songName = document.getElementById('songName').value;
-
-        // Construct the Spotify URI for search
         const spotifySearchURI = `spotify:search:${encodeURIComponent(
             songName
         )}`;
@@ -268,48 +247,35 @@ const VirtualAssistant = ({ mode }: Props) => {
     }
 
     function isSpotifyAppInstalled(spotifySearchURI: any) {
-        // You can check if the Spotify URI scheme is supported
         return (window.location.href = spotifySearchURI);
-        // if (window.location.href = spotifySearchURI){
-
-        // };
-        // return false;
     }
 
     function performGoogleSearch(searchTerm: string) {
-        // Get the user's search term
-        // const searchTerm = document.getElementById('searchTerm').value;
-
-        // Construct the Google search URL
         const googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(
             searchTerm
         )}`;
 
-        const isAndroid = /Android/i.test(navigator.userAgent);
+        openTab(googleSearchURL);
 
-        if (isAndroid) {
-            // Check if the Google app is installed on Android
-            const isGoogleAppInstalled = true;
+        // const isAndroid = /Android/i.test(navigator.userAgent);
 
-            if (isGoogleAppInstalled) {
-                // Open the Google app using a custom URI scheme
-                const googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(
-                    searchTerm
-                )}`;
+        // if (isAndroid) {
+        //     // Check if the Google app is installed on Android
+        //     const isGoogleAppInstalled = true;
 
-                // Open the URL in the device's default web browser
-                // window.open(googleSearchURL, "_blank");
-                openTab(googleSearchURL);
-            } else {
-                // Open the URL in a new tab
-                openTab(googleSearchURL);
-                // window.open(googleSearchURL, "_blank");
-            }
-        } else {
-            // For non-Android devices, simply open the URL in a new tab
-            openTab(googleSearchURL);
-            // window.open(googleSearchURL, "_blank");
-        }
+        //     if (isGoogleAppInstalled) {
+        //         // Open the Google app using a custom URI scheme
+        //         const googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(
+        //             searchTerm
+        //         )}`;
+
+        //         openTab(googleSearchURL);
+        //     } else {
+        //         openTab(googleSearchURL);
+        //     }
+        // } else {
+        //     openTab(googleSearchURL);
+        // }
     }
 
     function botResponseText(message: string) {
@@ -319,9 +285,6 @@ const VirtualAssistant = ({ mode }: Props) => {
                 message: message,
             };
             setChats((prevChats) => [...prevChats, botResponse]);
-
-            // window.open("#scrollbottom");
-            // scrollToBottom();
         }, 1000);
 
         setTimeout(() => {
@@ -374,14 +337,6 @@ const VirtualAssistant = ({ mode }: Props) => {
                                         : "chat-start"
                                 }`}
                             >
-                                {/* <div
-                                key={index}
-                                className={`p-2 m-2 rounded-lg ${
-                                    chat.role === "user"
-                                        ? "bg-slate-500 text-white self-end w-1/2 float-right"
-                                        : "bg-slate-900 self-start w-1/2 float-left"
-                                }`}
-                            > */}
                                 <p
                                     className={`chat-bubble ${
                                         chat.role === "user"

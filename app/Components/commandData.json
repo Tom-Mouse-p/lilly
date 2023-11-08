@@ -26,6 +26,19 @@
         "time & date information"
     ],
     "DATE": [
+        "what is date",
+        "what is the date",
+        "what is the current date",
+        "tell me the date",
+        "show me the current date",
+        "current date now",
+        "get me the date",
+        "date information",
+        "date",
+        "current day",
+        "day now"
+    ],
+    "TIME": [
         "what is time",
         "what is the time",
         "what is the current time",
@@ -36,19 +49,6 @@
         "time information",
         "current hour",
         "hour now",
-        "date"
-    ],
-    "TIME": [
-        "what is date",
-        "what is the date",
-        "what is the current date",
-        "tell me the date",
-        "show me the current date",
-        "current date now",
-        "get me the date",
-        "date information",
-        "current day",
-        "day now",
         "time"
     ]
 }

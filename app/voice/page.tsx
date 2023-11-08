@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
+import { log } from "util";
 
 const SpeechRecognitionPage: React.FC = () => {
     useEffect(() => {
@@ -25,6 +26,8 @@ const SpeechRecognitionPage: React.FC = () => {
             recognition.onresult = (event: any) => {
                 const result = event.results[0][0].transcript;
                 output1!.textContent = `You said: ${result}`;
+                // output1!.textContent = `${JSON.stringify(event)} ${result}`;
+                console.log(event);
             };
 
             recognition.onend = () => {
@@ -44,7 +47,9 @@ const SpeechRecognitionPage: React.FC = () => {
         <div>
             <h1>Speech Recognition Example</h1>
             <p>Click the button and start speaking.</p>
-            <button id="startButton">Start Speech Recognition</button>
+            <button className="btn" id="startButton">
+                Start Speech Recognition
+            </button>
             <p id="output"></p>
             <p id="output1"></p>
         </div>

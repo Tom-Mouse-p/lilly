@@ -3,8 +3,6 @@ import React from "react";
 // Define the data as an object
 const commandData: Record<string, string[]> = require("./commandData.json");
 
-// Now you can use commandData as an object containing your commands
-
 const CommandsList: React.FC = () => {
     return (
         <div className="bg-slate-900 container p-4 rounded-lg">
